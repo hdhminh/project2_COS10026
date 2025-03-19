@@ -157,5 +157,33 @@
         });
     });
 });
+    
+document.getElementById("salaryRange").addEventListener("change", function () {
+    let selectedRange = this.value; // Example: "60-80"
+    let jobs = document.querySelectorAll(".job-card");
 
+    jobs.forEach(job => {
+        let salaryText = job.querySelector(".salary").textContent;
+        let salaryMatch = salaryText.match(/\$(\d{1,3}(?:,\d{3})*)\s*-\s*\$(\d{1,3}(?:,\d{3})*)/);
+
+        if (salaryMatch) {
+            let minSalary = parseInt(salaryMatch[1].replace(/,/g, ""), 10);
+            let maxSalary = parseInt(salaryMatch[2].replace(/,/g, ""), 10);
+            let show = false;
+
+            if (selectedRange === "") {
+                show = true; // Show all jobs
+            } else if (selectedRange === "100-plus") {
+                show = minSalary >= 100000;
+            } else {
+                let [filterMin, filterMax] = selectedRange.split("-").map(n => parseInt(n) * 1000);
+                show = (minSalary >= filterMin && minSalary <= filterMax) || 
+                       (maxSalary >= filterMin && maxSalary <= filterMax);
+            }
+
+            job.style.display = show ? "block" : "none";
+        }
+    });
+});
 </script>
+
