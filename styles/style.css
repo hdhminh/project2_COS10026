@@ -1328,14 +1328,21 @@
   display: flex;
   padding: 2rem;
   gap: 2rem;
-  max-width: 1980px;
+  max-width: 1080px;
   margin: 0 auto;
   min-height: calc(100vh - 180px);
 }
 
 .jobspage .job-listings {
   flex: 1;
-  min-width: 820px;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* Responsive grid */
+  gap: 20px; /* Space between job cards */
+  padding: 20px;
+  justify-content: center;
 }
 
 .jobspage .job-card {
