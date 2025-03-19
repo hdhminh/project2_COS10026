@@ -54,7 +54,7 @@
                 </p>
                 <p>
                     <label for="PhoneNumber">Phone Number</label>
-                    <input type = "text" id = "PhoneNumber" name = "Phone Number" required = "required" placeholder = "37252525" 
+                    <input type = "text" id = "PhoneNumber" name = "Phone" required = "required" placeholder = "37252525" 
                     pattern="[0-9]+">
                 </p>
                 <p id="genders">

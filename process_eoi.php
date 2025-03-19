@@ -16,23 +16,47 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // 2. Collect & sanitize form data
 //
 // Example fields—adjust for your actual form names
-$jobRefNum    = trim($_POST['jobRefNum'] ?? '');
-$firstName    = trim($_POST['firstName'] ?? '');
-$lastName     = trim($_POST['lastName'] ?? '');
-$dateOfBirth  = trim($_POST['dob'] ?? '');
-$gender       = trim($_POST['gender'] ?? '');
-$street       = trim($_POST['street'] ?? '');
-$suburb       = trim($_POST['suburb'] ?? '');
-$state        = trim($_POST['state'] ?? '');
-$postcode     = trim($_POST['postcode'] ?? '');
-$email        = trim($_POST['email'] ?? '');
-$phone        = trim($_POST['phone'] ?? '');
-$skill1       = trim($_POST['skill1'] ?? '');
-$skill2       = trim($_POST['skill2'] ?? '');
-$skill3       = trim($_POST['skill3'] ?? '');
-$skill4       = trim($_POST['skill4'] ?? '');
-$skill5       = trim($_POST['skill5'] ?? '');
-$otherSkills  = trim($_POST['otherSkills'] ?? '');
+$jobRefNum    = trim(isset($_POST['position']) ? $_POST['position'] : '');
+$firstName    = trim(isset($_POST['First_Name']) ? $_POST['First_Name'] : '');
+$lastName     = trim(isset($_POST['Last_Name']) ? $_POST['Last_Name'] : '');
+$dateOfBirth  = trim(isset($_POST['DOB']) ? $_POST['DOB'] : '');
+$gender       = trim(isset($_POST['Gender']) ? $_POST['Gender'] : '');
+$street       = trim(isset($_POST['Street_Address']) ? $_POST['Street_Address'] : '');
+$suburb       = trim(isset($_POST['Suburb/town']) ? $_POST['Suburb/town'] : '');
+$state        = trim(isset($_POST['state']) ? $_POST['state'] : '');
+$postcode     = trim(isset($_POST['Postcode']) ? $_POST['Postcode'] : '');
+$email        = trim(isset($_POST['Email']) ? $_POST['Email'] : '');
+$phone        = trim(isset($_POST['Phone']) ? $_POST['Phone'] : '');
+$skills = isset($_POST['Skills']) ? $_POST['Skills'] : array();
+$skill1 = isset($skills[0]) ? $skills[0] : '';
+$skill2 = isset($skills[1]) ? $skills[1] : '';
+$skill3 = isset($skills[2]) ? $skills[2] : '';
+$skill4 = isset($skills[3]) ? $skills[3] : '';
+$skill5 = isset($skills[4]) ? $skills[4] : '';
+$otherSkills = isset($skills[5]) ? $skills[5] : '';
+
+
+$createTableSQL = "CREATE TABLE IF NOT EXISTS eoi (
+    eoi_id INT AUTO_INCREMENT PRIMARY KEY,
+    jobRefNum VARCHAR(20) NOT NULL,
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    dateOfBirth DATE NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') NOT NULL,
+    street VARCHAR(100) NOT NULL,
+    suburb VARCHAR(50) NOT NULL,
+    state VARCHAR(10) NOT NULL,
+    postcode VARCHAR(10) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    skill1 VARCHAR(50),
+    skill2 VARCHAR(50),
+    skill3 VARCHAR(50),
+    skill4 VARCHAR(50),
+    skill5 VARCHAR(50),
+    otherSkills TEXT,
+    status VARCHAR(20) DEFAULT 'New'
+);";
 
 // Remove backslashes and HTML special chars
 $jobRefNum    = strip_tags(stripslashes($jobRefNum));
@@ -43,10 +67,25 @@ $jobRefNum    = strip_tags(stripslashes($jobRefNum));
 // 3. Server-side validation
 //
 // a) Required fields not empty?
-if (empty($jobRefNum) || empty($firstName) || empty($lastName) ||
-    empty($street) || empty($suburb) || empty($state) ||
-    empty($postcode) || empty($email) || empty($phone)) {
-    die("One or more required fields are missing. Please go back and try again.");
+//if (empty($jobRefNum) || empty($firstName) || empty($lastName) ||
+//    empty($street) || empty($suburb) || empty($state) ||
+//    empty($postcode) || empty($email) || empty($phone)) {
+//    die("One or more required fields are missing. Please go back and try again.");
+//}
+$missingFields = [];
+
+if (empty($jobRefNum)) $missingFields[] = "Job Reference Number";
+if (empty($firstName)) $missingFields[] = "First Name";
+if (empty($lastName)) $missingFields[] = "Last Name";
+if (empty($street)) $missingFields[] = "Street";
+if (empty($suburb)) $missingFields[] = "Suburb";
+if (empty($state)) $missingFields[] = "State";
+if (empty($postcode)) $missingFields[] = "Postcode";
+if (empty($email)) $missingFields[] = "Email";
+if (empty($phone)) $missingFields[] = "Phone Number";
+
+if (!empty($missingFields)) {
+    die("The following required fields are missing: <br>" . implode("<br>", $missingFields) . "<br>Please go back and try again.");
 }
 
 // b) Check job reference number is exactly 5 alphanumeric
@@ -55,10 +94,10 @@ if (!preg_match('/^[A-Za-z0-9]{5}$/', $jobRefNum)) {
 }
 
 // c) Check names (only letters, up to 20 chars)
-if (!preg_match('/^[A-Za-z]{1,20}$/', $firstName)) {
+if (!preg_match('/^[A-Za-z-]{1,20}$/', $firstName)) {
     die("First name must be 1–20 alphabetic characters.");
 }
-if (!preg_match('/^[A-Za-z]{1,20}$/', $lastName)) {
+if (!preg_match('/^[A-Za-z-]{1,20}$/', $lastName)) {
     die("Last name must be 1–20 alphabetic characters.");
 }
 
@@ -118,7 +157,7 @@ $insertSQL = "
     (JobReferenceNumber, FirstName, LastName, DateOfBirth, Gender,
      StreetAddress, Suburb, State, Postcode, Email, Phone,
      Skill1, Skill2, Skill3, Skill4, Skill5, OtherSkills)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ";
 
 $stmt = mysqli_prepare($conn, $insertSQL);
@@ -127,7 +166,7 @@ if (!$stmt) {
 }
 
 // Bind parameters (s = string). Adapt if you use other data types.
-mysqli_stmt_bind_param($stmt, "ssssssssssssssss",
+mysqli_stmt_bind_param($stmt, "sssssssssssssssss",
     $jobRefNum,
     $firstName,
     $lastName,
