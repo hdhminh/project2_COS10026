@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <?php require_once("head.inc"); ?>
+    <?php require_once("header.inc"); ?>
 </head>
   <body class="homepage">
     <main>
