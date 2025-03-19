@@ -220,3 +220,27 @@
 </body>
 
 </html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.querySelector(".search-input");
+    const jobCards = document.querySelectorAll(".job-card");
+
+    searchInput.addEventListener("input", function () {
+        const searchText = searchInput.value.toLowerCase();
+
+        jobCards.forEach(jobCard => {
+            const jobTitle = jobCard.querySelector("h2").textContent.toLowerCase();
+            const jobTags = Array.from(jobCard.querySelectorAll(".tag")).map(tag => tag.textContent.toLowerCase());
+
+            // Check if job title or any tag includes the search text
+            if (jobTitle.includes(searchText) || jobTags.some(tag => tag.includes(searchText))) {
+                jobCard.style.display = "block"; // Show job card
+            } else {
+                jobCard.style.display = "none"; // Hide job card
+            }
+        });
+    });
+});
+
+</script>

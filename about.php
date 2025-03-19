@@ -124,30 +124,62 @@
 
         <div class="timeline">
             <div class="event">
-                <div class="year">Week 1</div>
-                <div class="event-title"> Built the skeleton</div>
-                <div class="event-details">
-                    <strong>Date:</strong> 26 - 31/1/2025<br />
-                    <strong>Details:</strong> We built the skeleton of the page
-                    using only HTML
-                </div>
+              <div class="year">Week 1
+               
+              </div>
+              <div class="event-title"> Built the skeleton</div>
+              <div class="event-details">
+                <strong>Date:</strong> 26 - 31/01/2025<br />
+                <strong>Details:</strong> We built the skeleton of the page 
+                using only HTML
+                <p> Assignment 1 </p>
+              </div>
             </div>
             <div class="event">
-                <div class="year">Week 2</div>
-                <div class="event-title"> Added CSS </div>
-                <div class="event-details">
-                    <strong>Date:</strong>1 - 8/2/2025<br />
-                    <strong>Details:</strong> We began adding CSS to our page
-                    and finishing by that weekend.
-                </div>
+              <div class="year">Week 2</div>
+              <div class="event-title"> Added CSS </div>
+              <div class="event-details">
+                <strong>Date:</strong>01 - 08/02/2025<br />
+                <strong>Details:</strong> We began adding CSS to our page 
+                and finishing by that weekend.
+                <p> Assignment 1 </p>
+              </div>
             </div>
             <div class="event">
-                <div class="year">Week 3 & 4</div>
-                <div class="event-title">Enhancement and Video</div>
-                <div class="event-details">
-                    <strong>Date:</strong> 9 - 21/2/2025<br />
-                    <strong>Details:</strong> Started the final step. Our members each get 1:15 per person.
-                </div>
+              <div class="year">Week 3 & 4</div>
+              <div class="event-title">Enhancement and Video</div>
+              <div class="event-details">
+                <strong>Date:</strong> 09 - 21/02/2025<br/>
+                <strong>Details:</strong> Started the final step. Our members each get 1:15 per person.
+                <p> Assignment 1 </p>
+              </div>
+            </div>
+            <div class="event">
+              <div class="year">Week 8</div>
+              <div class="event-title">PHP and Database</div>
+              <div class="event-details">
+                <strong>Date:</strong> 03 - 09/03/2025<br/>
+                <strong>Details:</strong> Converted pages to php and linked to database.
+                <p> Assignment 2 </p>
+              </div>
+            </div>
+            <div class="event">
+              <div class="year">Week 9</div>
+              <div class="event-title">Javascript</div>
+              <div class="event-details">
+                <strong>Date:</strong> 10 - 16/02/2025<br/>
+                <strong>Details:</strong> Increased user experiences by adding Javascript functions.
+                <p> Assignment 2 </p>
+              </div>
+            </div>
+            <div class="event">
+              <div class="year">Week 10 & 11</div>
+              <div class="event-title">Enhancement and Presentation</div>
+              <div class="event-details">
+                <strong>Date:</strong> 17 - 23/03/2025<br/>
+                <strong>Details:</strong> Complete the final step and prepare for presentation.
+                <p> Assignment 2 </p>
+              </div>
             </div>
         </div>
     </div>
