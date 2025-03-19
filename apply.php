@@ -48,6 +48,16 @@
                     <input type="text" id="DateOfBirth" name="DOB" required="required" placeholder="DD/MM/YYYY"
                         pattern="\d{2}/\d{2}/\d{4}" />
                 </p>
+                <p>
+                    <label for="Email">Email</label>
+                    <input type = "text" id = "Email" name = "Email" required = "required" placeholder = "name@example.com"
+                    pattern="[a-zA-Z ]+"/>
+                </p>
+                <p>
+                    <label for="PhoneNumber">Phone Number</label>
+                    <input type = "text" id = "PhoneNumber" name = "Phone Number" required = "required" placeholder = "37252525" 
+                    pattern="[0-9]+">
+                </p>
                 <p id="genders">
                     <label for="genders">Gender</label>
                 <div class="gender-options">
