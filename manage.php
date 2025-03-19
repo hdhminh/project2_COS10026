@@ -72,7 +72,7 @@ if (!$result) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles/manageStyle.css" />
+    <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body class="managepage">
     <?php require_once("menu.inc"); ?>
