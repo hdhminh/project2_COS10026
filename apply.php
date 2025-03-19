@@ -50,12 +50,12 @@
                 </p>
                 <p>
                     <label for="Email">Email</label>
-                    <input type = "email" id = "Email" name = "Email" required = "required" placeholder = "name@example.com"/>
+                    <input type="email" id="Email" name="Email" required="required" placeholder="name@example.com" />
                 </p>
                 <p>
                     <label for="PhoneNumber">Phone Number</label>
-                    <input type = "text" id = "PhoneNumber" name = "Phone" required = "required" placeholder = "37252525" 
-                    pattern="[0-9]+">
+                    <input type="text" id="PhoneNumber" name="Phone" required="required" placeholder="37252525"
+                        pattern="[0-9]+">
                 </p>
                 <p id="genders">
                     <label for="genders">Gender</label>
@@ -145,9 +145,38 @@
             </fieldset>
         </div>
         <input type="submit" value="Apply" />
-        <input type="reset" value="Reset form" />
+        <input type="reset" value="Reset Form" onclick="clearSessionAndReset()" />
     </form>
     <?php require_once("footer.inc"); ?>
 </body>
 
 </html>
+
+<script>
+function clearSessionAndReset() {
+    // Create a hidden form to submit a reset request
+    var resetForm = document.createElement('form');
+    resetForm.method = 'POST';
+    resetForm.action = 'process_eoi.php';
+
+    var resetInput = document.createElement('input');
+    resetInput.type = 'hidden';
+    resetInput.name = 'reset_form';
+    resetInput.value = '1';
+
+    resetForm.appendChild(resetInput);
+    document.body.appendChild(resetForm);
+    resetForm.submit();
+
+    // Prevent the default reset behavior until our form submits
+    return false;
+}
+
+// Add onclick handler to the reset button
+document.addEventListener('DOMContentLoaded', function() {
+    var resetButton = document.querySelector('input[type="reset"]');
+    if (resetButton) {
+        resetButton.onclick = clearSessionAndReset;
+    }
+});
+</script>

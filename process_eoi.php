@@ -72,62 +72,32 @@ $jobRefNum    = strip_tags(stripslashes($jobRefNum));
 //    empty($postcode) || empty($email) || empty($phone)) {
 //    die("One or more required fields are missing. Please go back and try again.");
 //}
-$missingFields = [];
-
-if (empty($jobRefNum)) $missingFields[] = "Job Reference Number";
-if (empty($firstName)) $missingFields[] = "First Name";
-if (empty($lastName)) $missingFields[] = "Last Name";
-if (empty($street)) $missingFields[] = "Street";
-if (empty($suburb)) $missingFields[] = "Suburb";
-if (empty($state)) $missingFields[] = "State";
-if (empty($postcode)) $missingFields[] = "Postcode";
-if (empty($email)) $missingFields[] = "Email";
-if (empty($phone)) $missingFields[] = "Phone Number";
-
-if (!empty($missingFields)) {
-    die("The following required fields are missing: <br>" . implode("<br>", $missingFields) . "<br>Please go back and try again.");
+// Validation errors
+function showError($message) {
+    echo "<script>alert('$message'); window.history.back();</script>";
+    exit;
 }
+
+if (empty($jobRefNum)) showError("Job Reference Number is required.");
+if (empty($firstName)) showError("First Name is required.");
+if (empty($lastName)) showError("Last Name is required.");
+if (empty($street)) showError("Street is required.");
+if (empty($suburb)) showError("Suburb is required.");
+if (empty($state)) showError("State is required.");
+if (empty($postcode)) showError("Postcode is required.");
+if (empty($email)) showError("Email is required.");
+if (empty($phone)) showError("Phone Number is required.");
 
 // b) Check job reference number is exactly 5 alphanumeric
-if (!preg_match('/^[A-Za-z0-9]{5}$/', $jobRefNum)) {
-    die("Job Reference Number must be exactly 5 alphanumeric characters.");
-}
+if (!preg_match('/^[A-Za-z0-9]{5}$/', $jobRefNum)) showError("Job Reference Number must be exactly 5 alphanumeric characters.");
+if (!preg_match('/^[a-zA-Z ]{1,20}$/', $firstName)) showError("First Name must be 1–20 alphabetic characters.");
+if (!preg_match('/^[A-Za-z-]{1,20}$/', $lastName)) showError("Last Name must be 1–20 alphabetic characters.");
+if (!preg_match('/^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/', $dateOfBirth)) showError("Date of Birth must be in format dd/mm/yyyy.");
+if (!in_array($state, ["VIC","NSW","QLD","NT","WA","SA","TAS","ACT"])) showError("Invalid state selection.");
+if (!preg_match('/^\d{4}$/', $postcode)) showError("Postcode must be exactly 4 digits.");
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) showError("Invalid email address format.");
+if (!preg_match('/^[0-9 ]{8,12}$/', $phone)) showError("Phone number must be 8–12 digits/spaces.");
 
-// c) Check names (only letters, up to 20 chars)
-if (!preg_match('/^[A-Za-z-]{1,20}$/', $firstName)) {
-    die("First name must be 1–20 alphabetic characters.");
-}
-if (!preg_match('/^[A-Za-z-]{1,20}$/', $lastName)) {
-    die("Last name must be 1–20 alphabetic characters.");
-}
-
-// d) Validate date of birth is dd/mm/yyyy and age between 15 and 80 (example)
-$dobPattern = '/^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/';
-if (!preg_match($dobPattern, $dateOfBirth)) {
-    die("Date of birth must be in format dd/mm/yyyy.");
-}
-// Additional check for age range...
-
-// e) Validate state is one of the given values
-$validStates = ["VIC","NSW","QLD","NT","WA","SA","TAS","ACT"];
-if (!in_array($state, $validStates)) {
-    die("Invalid state selection.");
-}
-
-// f) Validate postcode is exactly 4 digits
-if (!preg_match('/^\d{4}$/', $postcode)) {
-    die("Postcode must be exactly 4 digits.");
-}
-
-// g) Basic email format check
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    die("Invalid email address format.");
-}
-
-// h) Phone 8 to 12 digits (optionally allow spaces)
-if (!preg_match('/^[0-9 ]{8,12}$/', $phone)) {
-    die("Phone number must be 8–12 digits/spaces.");
-}
 
 // i) If a “check box” was selected requiring OtherSkills, ensure not empty, etc.
 // if ( /* skill checkbox was ticked */ && empty($otherSkills)) {...}
@@ -199,8 +169,7 @@ mysqli_close($conn);
 //
 // 7. Display a confirmation message
 //
-echo "<h1>Thank you!</h1>";
-echo "<p>Your Expression of Interest has been recorded.</p>";
-echo "<p>Your unique EOI Number is: <strong>{$newEOINumber}</strong></p>";
+header("Location: confirmation.php?eoi=$newEOINumber");
+exit()
 
 ?>
