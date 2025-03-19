@@ -75,6 +75,7 @@ if (!$result) {
     <link rel="stylesheet" href="styles/manageStyle.css" />
 </head>
 <body class="managepage">
+    <?php require_once("menu.inc"); ?>
     <div id="page-container">
         <h1 class="page-title">EOI Management System</h1>
         
