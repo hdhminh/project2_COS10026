@@ -9,7 +9,7 @@
     <?php require_once("menu.inc"); ?>
     </br></br></br>
     <h1>Job Application Form</h1>
-    <form method="post" action="https://mercury.swin.edu.au/it000000/formtest.php">
+    <form method="post" action="process_eoi.php">
         <div class="animatedborders">
             <fieldset>
                 <!--Position Form only text 5 alphanumberic-->
@@ -50,8 +50,7 @@
                 </p>
                 <p>
                     <label for="Email">Email</label>
-                    <input type = "text" id = "Email" name = "Email" required = "required" placeholder = "name@example.com"
-                    pattern="[a-zA-Z ]+"/>
+                    <input type = "email" id = "Email" name = "Email" required = "required" placeholder = "name@example.com"/>
                 </p>
                 <p>
                     <label for="PhoneNumber">Phone Number</label>
