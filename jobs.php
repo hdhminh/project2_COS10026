@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
-    <?php require_once("header.inc"); ?>
+    <?php require_once("header.inc"); 
+    session_start();
+    ?>
 </head>
 
 <body class="jobspage">
@@ -31,7 +33,7 @@
     <main>
         <!-- Job Listings Section -->
           <div class="job-listings">
-            <a href="#developer-desc" class="job-card">
+            <a href="jobsdescription.php?id=GD123"  class="job-card">
               <h2>🎮 Game Developer</h2>
               <p class="job-meta"><strong>Ref:</strong> GD123</p>
               <p class="job-brief">
@@ -48,7 +50,7 @@
               </div>
             </a>
     
-            <a href="#artist-desc" class="job-card">
+            <a href="jobsdescription.php?id=GA456" class="job-card">
               <h2>🎨 Game Artist</h2>
               <p class="job-meta"><strong>Ref:</strong> GA456</p>
               <p class="job-brief">
@@ -64,7 +66,7 @@
                 <span class="tag">Blender</span>
               </div>
     
-            <a href="#sound-desc" class="job-card">
+            <a href="jobsdescription.php?id=SD789" class="job-card">
               <h2>🎵 Game Sound Designer</h2>
               <p class="job-meta"><strong>Ref:</strong> SD789</p>
               <p class="job-brief">
@@ -80,7 +82,7 @@
                 <span class="tag">Wwise</span>
               </div>
             </a>
-            <a href="#tester-desc" class="job-card">
+            <a href="jobsdescription.php?id=GT101" class="job-card">
               <h2>🧪 Game Tester</h2>
               <p class="job-meta"><strong>Ref:</strong> GT101</p>
               <p class="job-brief">
@@ -96,7 +98,7 @@
               </div>
             </a>
     
-            <a href="#writer-desc" class="job-card">
+            <a href="jobsdescription.php?id=GW202" class="job-card">
               <h2>✍️ Game Writer</h2>
               <p class="job-meta"><strong>Ref:</strong> GW202</p>
               <p class="job-brief">
@@ -112,7 +114,7 @@
               </div>
             </a>
     
-            <a href="#uiux-desc" class="job-card">
+            <a href="jobsdescription.php?id=UIUX303" class="job-card">
               <h2>🎮 UI/UX Designer</h2>
               <p class="job-meta"><strong>Ref:</strong> UIUX303</p>
               <p class="job-brief">
