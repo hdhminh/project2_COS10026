@@ -6,7 +6,9 @@
 </head>
 
 <body class="applypage">
-    <?php require_once("menu.inc"); ?>
+    <?php 
+        session_start();
+        require_once("menu.inc.php"); ?>
     </br></br></br>
     <h1>Job Application Form</h1>
     <form method="post" action="process_eoi.php">
