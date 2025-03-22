@@ -77,7 +77,13 @@ if (!$result) {
 </head>
 
 <body class="managepage">
-    <?php require_once("menu.inc"); ?>
+    <?php 
+        session_start();
+        if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+            header("Location: login.php");
+            exit();
+        }
+        require_once("menu.inc.php"); ?>
     </br></br></br>
     <div id="page-container">
         <h1 class="page-title">EOI Management System</h1>
