@@ -3,12 +3,13 @@
 
 <head>
     <?php require_once("header.inc"); 
-    session_start();
     ?>
 </head>
 
 <body class="jobspage">
-    <?php require_once("menu.inc"); ?>
+    <?php 
+        session_start();
+        require_once("menu.inc.php"); ?>
 
     <h1>Game Applications Jobs</h1>
     <div class="nav-search">
@@ -32,104 +33,104 @@
     </div>
     <main>
         <!-- Job Listings Section -->
-          <div class="job-listings">
-            <a href="jobsdescription.php?id=GD123"  class="job-card">
-              <h2>🎮 Game Developer</h2>
-              <p class="job-meta"><strong>Ref:</strong> GD123</p>
-              <p class="job-brief">
-                Build and optimize core game mechanics, ensure performance
-                efficiency, and collaborate with teams.
-              </p>
-              <p class="job-meta salary">💰 $75,000 - $110,000 per year</p>
-              <div class="job-tags">
-                <span class="tag">Full-time</span>
-                <span class="tag">Remote</span>
-                <span class="tag">Senior Level</span>
-                <span class="tag">C++</span>
-                <span class="tag">Unity</span>
-              </div>
+        <div class="job-listings">
+            <a href="jobsdescription.php?id=GD123" class="job-card">
+                <h2>🎮 Game Developer</h2>
+                <p class="job-meta"><strong>Ref:</strong> GD123</p>
+                <p class="job-brief">
+                    Build and optimize core game mechanics, ensure performance
+                    efficiency, and collaborate with teams.
+                </p>
+                <p class="job-meta salary">💰 $75,000 - $110,000 per year</p>
+                <div class="job-tags">
+                    <span class="tag">Full-time</span>
+                    <span class="tag">Remote</span>
+                    <span class="tag">Senior Level</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">Unity</span>
+                </div>
             </a>
-    
+
             <a href="jobsdescription.php?id=GA456" class="job-card">
-              <h2>🎨 Game Artist</h2>
-              <p class="job-meta"><strong>Ref:</strong> GA456</p>
-              <p class="job-brief">
-                Create stunning visual assets for the game world, including
-                characters and environments.
-              </p>
-              <p class="job-meta salary">💰 $65,000 - $95,000 per year</p>
-              <div class="job-tags">
-                <span class="tag">Full-time</span>
-                <span class="tag">Hybrid</span>
-                <span class="tag">Mid Level</span>
-                <span class="tag">3D Modeling</span>
-                <span class="tag">Blender</span>
-              </div>
-    
-            <a href="jobsdescription.php?id=SD789" class="job-card">
-              <h2>🎵 Game Sound Designer</h2>
-              <p class="job-meta"><strong>Ref:</strong> SD789</p>
-              <p class="job-brief">
-                Craft and implement high-quality sound effects, music, and dialogue.
-              </p>
-              <p class="job-meta salary">💰 $60,000 - $90,000 per year</p>
-              
-              <div class="job-tags">
-                <span class="tag">Full-time</span>
-                <span class="tag">On-site</span>
-                <span class="tag">Mid Level</span>
-                <span class="tag">FMOD</span>
-                <span class="tag">Wwise</span>
-              </div>
-            </a>
-            <a href="jobsdescription.php?id=GT101" class="job-card">
-              <h2>🧪 Game Tester</h2>
-              <p class="job-meta"><strong>Ref:</strong> GT101</p>
-              <p class="job-brief">
-                Test and identify bugs in game features, and ensure quality control.
-              </p>
-              <p class="job-meta salary">💰 $45,000 - $70,000 per year</p>
-              <div class="job-tags">
-                <span class="tag">Full-time</span>
-                <span class="tag">Hybrid</span>
-                <span class="tag">Entry Level</span>
-                <span class="tag">QA</span>
-                <span class="tag">Jira</span>
-              </div>
-            </a>
-    
-            <a href="jobsdescription.php?id=GW202" class="job-card">
-              <h2>✍️ Game Writer</h2>
-              <p class="job-meta"><strong>Ref:</strong> GW202</p>
-              <p class="job-brief">
-                Write compelling narratives, dialogue, and storylines for the game.
-              </p>
-              <p class="job-meta salary">💰 $50,000 - $80,000 per year</p>
-              <div class="job-tags">
-                <span class="tag">Full-time</span>
-                <span class="tag">Remote</span>
-                <span class="tag">Mid Level</span>
-                <span class="tag">Narrative</span>
-                <span class="tag">Creative</span>
-              </div>
-            </a>
-    
-            <a href="jobsdescription.php?id=UIUX303" class="job-card">
-              <h2>🎮 UI/UX Designer</h2>
-              <p class="job-meta"><strong>Ref:</strong> UIUX303</p>
-              <p class="job-brief">
-                Design user-friendly interfaces and improve the overall player
-                experience.
-              </p>
-              <p class="job-meta salary">💰 $60,000 - $95,000 per year</p>
-              <div class="job-tags">
-                <span class="tag">Full-time</span>
-                <span class="tag">Hybrid</span>
-                <span class="tag">Senior Level</span>
-                <span class="tag">Figma</span>
-                <span class="tag">Unity</span>
-              </div>
-            </a>
+                <h2>🎨 Game Artist</h2>
+                <p class="job-meta"><strong>Ref:</strong> GA456</p>
+                <p class="job-brief">
+                    Create stunning visual assets for the game world, including
+                    characters and environments.
+                </p>
+                <p class="job-meta salary">💰 $65,000 - $95,000 per year</p>
+                <div class="job-tags">
+                    <span class="tag">Full-time</span>
+                    <span class="tag">Hybrid</span>
+                    <span class="tag">Mid Level</span>
+                    <span class="tag">3D Modeling</span>
+                    <span class="tag">Blender</span>
+                </div>
+
+                <a href="jobsdescription.php?id=SD789" class="job-card">
+                    <h2>🎵 Game Sound Designer</h2>
+                    <p class="job-meta"><strong>Ref:</strong> SD789</p>
+                    <p class="job-brief">
+                        Craft and implement high-quality sound effects, music, and dialogue.
+                    </p>
+                    <p class="job-meta salary">💰 $60,000 - $90,000 per year</p>
+
+                    <div class="job-tags">
+                        <span class="tag">Full-time</span>
+                        <span class="tag">On-site</span>
+                        <span class="tag">Mid Level</span>
+                        <span class="tag">FMOD</span>
+                        <span class="tag">Wwise</span>
+                    </div>
+                </a>
+                <a href="jobsdescription.php?id=GT101" class="job-card">
+                    <h2>🧪 Game Tester</h2>
+                    <p class="job-meta"><strong>Ref:</strong> GT101</p>
+                    <p class="job-brief">
+                        Test and identify bugs in game features, and ensure quality control.
+                    </p>
+                    <p class="job-meta salary">💰 $45,000 - $70,000 per year</p>
+                    <div class="job-tags">
+                        <span class="tag">Full-time</span>
+                        <span class="tag">Hybrid</span>
+                        <span class="tag">Entry Level</span>
+                        <span class="tag">QA</span>
+                        <span class="tag">Jira</span>
+                    </div>
+                </a>
+
+                <a href="jobsdescription.php?id=GW202" class="job-card">
+                    <h2>✍️ Game Writer</h2>
+                    <p class="job-meta"><strong>Ref:</strong> GW202</p>
+                    <p class="job-brief">
+                        Write compelling narratives, dialogue, and storylines for the game.
+                    </p>
+                    <p class="job-meta salary">💰 $50,000 - $80,000 per year</p>
+                    <div class="job-tags">
+                        <span class="tag">Full-time</span>
+                        <span class="tag">Remote</span>
+                        <span class="tag">Mid Level</span>
+                        <span class="tag">Narrative</span>
+                        <span class="tag">Creative</span>
+                    </div>
+                </a>
+
+                <a href="jobsdescription.php?id=UIUX303" class="job-card">
+                    <h2>🎮 UI/UX Designer</h2>
+                    <p class="job-meta"><strong>Ref:</strong> UIUX303</p>
+                    <p class="job-brief">
+                        Design user-friendly interfaces and improve the overall player
+                        experience.
+                    </p>
+                    <p class="job-meta salary">💰 $60,000 - $95,000 per year</p>
+                    <div class="job-tags">
+                        <span class="tag">Full-time</span>
+                        <span class="tag">Hybrid</span>
+                        <span class="tag">Senior Level</span>
+                        <span class="tag">Figma</span>
+                        <span class="tag">Unity</span>
+                    </div>
+                </a>
         </div>
     </main>
 
@@ -139,19 +140,21 @@
 </html>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.querySelector(".search-input");
     const jobCards = document.querySelectorAll(".job-card");
 
-    searchInput.addEventListener("input", function () {
+    searchInput.addEventListener("input", function() {
         const searchText = searchInput.value.toLowerCase();
 
         jobCards.forEach(jobCard => {
             const jobTitle = jobCard.querySelector("h2").textContent.toLowerCase();
-            const jobTags = Array.from(jobCard.querySelectorAll(".tag")).map(tag => tag.textContent.toLowerCase());
+            const jobTags = Array.from(jobCard.querySelectorAll(".tag")).map(tag => tag
+                .textContent.toLowerCase());
 
             // Check if job title or any tag includes the search text
-            if (jobTitle.includes(searchText) || jobTags.some(tag => tag.includes(searchText))) {
+            if (jobTitle.includes(searchText) || jobTags.some(tag => tag.includes(
+                    searchText))) {
                 jobCard.style.display = "block"; // Show job card
             } else {
                 jobCard.style.display = "none"; // Hide job card
@@ -159,8 +162,8 @@
         });
     });
 });
-    
-document.getElementById("salaryRange").addEventListener("change", function () {
+
+document.getElementById("salaryRange").addEventListener("change", function() {
     let selectedRange = this.value; // Example: "60-80"
     let jobs = document.querySelectorAll(".job-card");
 
@@ -179,8 +182,8 @@ document.getElementById("salaryRange").addEventListener("change", function () {
                 show = minSalary >= 100000;
             } else {
                 let [filterMin, filterMax] = selectedRange.split("-").map(n => parseInt(n) * 1000);
-                show = (minSalary >= filterMin && minSalary <= filterMax) || 
-                       (maxSalary >= filterMin && maxSalary <= filterMax);
+                show = (minSalary >= filterMin && minSalary <= filterMax) ||
+                    (maxSalary >= filterMin && maxSalary <= filterMax);
             }
 
             job.style.display = show ? "block" : "none";
@@ -188,4 +191,3 @@ document.getElementById("salaryRange").addEventListener("change", function () {
     });
 });
 </script>
-
