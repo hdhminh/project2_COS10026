@@ -6,10 +6,29 @@
 </head>
 
 <body class="enhancepage">
-    <?php require_once("menu.inc"); ?>
+    <?php 
+        session_start();
+        require_once("menu.inc.php"); ?>
     </br></br>
 
-    <div class="container">
+    <div class="container" id="summary_list">
+        <h1>Full Assignments Enhancements</h1>
+        <p>
+            This page showcases all of enhancements from assignment 1 to assignment 2. Each part includes
+            code examples and live samples.
+        </p>
+
+        <div class="toc">
+            <h2>List of Sections</h2>
+            <ul>
+                <li><a href="#assignment_1_CSS">Assignment 1 - CSS Enhancements</a></li>
+                <li><a href="#assignment_2_JS">Assignment 2 - JavaScript Enhancements</a></li>
+                <li><a href="#assignment_2_PHP">Assignment 2 - PHP Enhancements</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container" id="assignment_1_CSS">
         <h1>Animation & Interactive Enhancements</h1>
         <p>
             This page showcases the custom animations and interactive elements used
@@ -26,6 +45,7 @@
                 <li><a href="#page-reveal">Page Reveal</a></li>
                 <li><a href="#background-slideshow">Background Slideshow</a></li>
                 <li><a href="#game-autorun">Game AutoRun</a></li>
+                <li><a href="#summary_list">Return </a></li>
             </ul>
         </div>
 
@@ -730,6 +750,8 @@
             </p>
         </div>
     </div>
+    <?php require_once("enhancements2.php"); ?>
+    <?php require_once("phpenhancements.php"); ?>
     <?php require_once("footer.inc"); ?>
 </body>
 

@@ -47,13 +47,13 @@ if (isset($_GET['job_ref']) && !empty($_GET['job_ref'])) {
 // Filter by first name if provided
 if (isset($_GET['first_name']) && !empty($_GET['first_name'])) {
     $first_name = mysqli_real_escape_string($dbconn, $_GET['first_name']);
-    $where_clauses[] = "first_name LIKE '%$first_name%'";
+    $where_clauses[] = "FirstName LIKE '%$first_name%'";
 }
 
 // Filter by last name if provided
 if (isset($_GET['last_name']) && !empty($_GET['last_name'])) {
     $last_name = mysqli_real_escape_string($dbconn, $_GET['last_name']);
-    $where_clauses[] = "last_name LIKE '%$last_name%'";
+    $where_clauses[] = "LastName LIKE '%$last_name%'";
 }
 
 // Construct the WHERE clause if any filters are applied
@@ -71,54 +71,78 @@ if (!$result) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php require_once("header.inc"); ?>
 </head>
+
 <body class="managepage">
-    <?php require_once("menu.inc"); ?>
+    <?php 
+        session_start();
+        if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+            header("Location: login.php");
+            exit();
+        }
+        require_once("menu.inc.php"); ?>
+    </br></br></br>
     <div id="page-container">
         <h1 class="page-title">EOI Management System</h1>
-        
+        </br></br>
         <!-- Filter Form -->
         <div id="filter-container" class="form-container">
             <h3 class="section-title">Filter EOIs</h3>
             <form id="filter-form" method="GET" action="">
                 <div class="form-group">
                     <label for="job_ref" class="form-label">Job Reference:</label>
-                    <div class="form-input">
+                    <div>
                         <select id="job_ref" name="job_ref" class="form-select">
                             <option value="" disabled selected>Select a job reference</option>
-                            <option value="GD123" <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GD123') ? 'selected' : ''; ?>>Game Developer: GD123</option>
-                            <option value="GA456" <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GA456') ? 'selected' : ''; ?>>Game Artist: GA456</option>
-                            <option value="SD789" <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'SD789') ? 'selected' : ''; ?>>Sound Designer: SD789</option>
-                            <option value="GT101" <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GT101') ? 'selected' : ''; ?>>Game Tester: GT101</option>
-                            <option value="GW202" <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GW202') ? 'selected' : ''; ?>>Game Writer: GW202</option>
-                            <option value="IX303" <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'IX303') ? 'selected' : ''; ?>>UI/UX Designer: IX303</option>
+                            <option value="GD123"
+                                <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GD123') ? 'selected' : ''; ?>>
+                                Game Developer: GD123</option>
+                            <option value="GA456"
+                                <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GA456') ? 'selected' : ''; ?>>
+                                Game Artist: GA456</option>
+                            <option value="SD789"
+                                <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'SD789') ? 'selected' : ''; ?>>
+                                Sound Designer: SD789</option>
+                            <option value="GT101"
+                                <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GT101') ? 'selected' : ''; ?>>
+                                Game Tester: GT101</option>
+                            <option value="GW202"
+                                <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'GW202') ? 'selected' : ''; ?>>
+                                Game Writer: GW202</option>
+                            <option value="IX303"
+                                <?php echo (isset($_GET['job_ref']) && $_GET['job_ref'] == 'IX303') ? 'selected' : ''; ?>>
+                                UI/UX Designer: IX303</option>
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="first_name" class="form-label">First Name:</label>
-                    <input type="text" id="first_name" name="first_name" class="form-input" value="<?php echo isset($_GET['first_name']) ? htmlspecialchars($_GET['first_name']) : ''; ?>">
+                    <input type="text" id="first_name" name="first_name" class="form-input"
+                        value="<?php echo isset($_GET['first_name']) ? htmlspecialchars($_GET['first_name']) : ''; ?>">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="last_name" class="form-label">Last Name:</label>
-                    <input type="text" id="last_name" name="last_name" class="form-input" value="<?php echo isset($_GET['last_name']) ? htmlspecialchars($_GET['last_name']) : ''; ?>">
+                    <input type="text" id="last_name" name="last_name" class="form-input"
+                        value="<?php echo isset($_GET['last_name']) ? htmlspecialchars($_GET['last_name']) : ''; ?>">
                 </div>
-                
+
                 <div class="form-buttons">
                     <button type="submit" class="btn btn-primary">Apply Filters</button>
                     <a href="manage.php"><button type="button" class="btn btn-secondary">Reset</button></a>
                 </div>
             </form>
         </div>
-        
+
         <!-- Delete EOIs Form -->
         <div id="delete-container" class="form-container">
             <h3 class="section-title">Delete EOIs by Job Reference</h3>
-            <form id="delete-form" method="POST" action="" onsubmit="return confirm('Are you sure you want to delete all EOIs with this job reference? This action cannot be undone.');">
+            <form id="delete-form" method="POST" action=""
+                onsubmit="return confirm('Are you sure you want to delete all EOIs with this job reference? This action cannot be undone.');">
                 <div class="form-group">
                     <label for="job_ref_to_delete" class="form-label">Job Reference:</label>
                     <select id="job_ref_to_delete" name="job_ref_to_delete" class="form-select" required>
@@ -136,7 +160,7 @@ if (!$result) {
                 </div>
             </form>
         </div>
-                
+
         <!-- Display EOIs -->
         <div id="eoi-results">
             <h2 class="section-title">Expressions of Interest</h2>
@@ -199,4 +223,5 @@ if (!$result) {
     </div>
     <?php require_once("footer.inc"); ?>
 </body>
+
 </html>
