@@ -129,7 +129,7 @@
         <p>
             Join <mark>Nova Games</mark> and be part of a team that creates games
             players love. Let's build the future of gaming together! 🚀 Interested?
-            <a href="apply.html"> Apply now!</a>
+            <a href="apply.php"> Apply now!</a>
         </p>
     </main>
     <?php require_once("footer.inc"); ?>
