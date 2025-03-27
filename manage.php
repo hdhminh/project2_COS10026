@@ -20,7 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p class='error-message'>Error deleting records: " . mysqli_error($dbconn) . "</p>";
         }
     }
-    
+
+    // Delete EOIs for a specific user ID
+    if (isset($_POST['delete_user_id'])) {
+        $user_id = mysqli_real_escape_string($dbconn, $_POST['user_id_to_delete']);
+        $delete_query = "DELETE FROM eoi WHERE user_id = '$user_id'";
+        if (mysqli_query($dbconn, $delete_query)) {
+            echo "<p class='success-message'>Successfully deleted EOIs for User ID: " . htmlspecialchars($user_id) . "</p>";
+        } else {
+            echo "<p class='error-message'>Error deleting records: " . mysqli_error($dbconn) . "</p>";
+        }
+    }
     
     // Update EOI status
     if (isset($_POST['update_status'])) {
@@ -33,33 +43,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p class='error-message'>Error updating status: " . mysqli_error($dbconn) . "</p>";
         }
     }
-
-
-    // Delete duplicate applications
-    if (isset($_POST['delete_duplicates'])) {
-        $duplicate_query = "DELETE e1 FROM eoi e1
-                            INNER JOIN eoi e2
-                            WHERE e1.ApplicationID > e2.ApplicationID
-                            AND e1.user_id = e2.user_id
-                            AND e1.JobReferenceNumber = e2.JobReferenceNumber";
-        
-        if (mysqli_query($dbconn, $duplicate_query)) {
-            echo "<p class='success-message'>Successfully deleted duplicate applications.</p>";
-        } else {
-            echo "<p class='error-message'>Error deleting duplicates: " . mysqli_error($dbconn) . "</p>";
-        }
-    }
-        
-    
 }
+
 // Determine query based on filter parameters
-$query = "SELECT * FROM users, eoi";
+$query = "SELECT * FROM eoi";
 $where_clauses = [];
 
 // Filter by job reference if provided
 if (isset($_GET['job_ref']) && !empty($_GET['job_ref'])) {
     $job_ref = mysqli_real_escape_string($dbconn, $_GET['job_ref']);
     $where_clauses[] = "JobReferenceNumber = '$job_ref'";
+}
+
+// Filter by user ID if provided
+if (isset($_GET['user_id']) && !empty($_GET['user_id'])) {
+    $user_id = mysqli_real_escape_string($dbconn, $_GET['user_id']);
+    $where_clauses[] = "user_id = '$user_id'";
 }
 
 // Filter by first name if provided
@@ -74,6 +73,21 @@ if (isset($_GET['last_name']) && !empty($_GET['last_name'])) {
     $where_clauses[] = "LastName LIKE '%$last_name%'";
 }
 
+// Filter by date range
+if ((isset($_GET['from_date']) && !empty($_GET['from_date'])) || 
+    (isset($_GET['to_date']) && !empty($_GET['to_date']))) {
+    
+    if (isset($_GET['from_date']) && !empty($_GET['from_date'])) {
+        $from_date = mysqli_real_escape_string($dbconn, $_GET['from_date']);
+        $where_clauses[] = "applied_at >= '$from_date'";
+    }
+    
+    if (isset($_GET['to_date']) && !empty($_GET['to_date'])) {
+        $to_date = mysqli_real_escape_string($dbconn, $_GET['to_date']);
+        $where_clauses[] = "applied_at <= '$to_date'";
+    }
+}
+
 // Construct the WHERE clause if any filters are applied
 if (!empty($where_clauses)) {
     $query .= " WHERE " . implode(" AND ", $where_clauses);
@@ -85,17 +99,6 @@ $query_error = "";
 if (!$result) {
     $query_error = "Database error: " . mysqli_error($dbconn);
 }
-
-// Check for duplicate applications
-$duplicate_result = null;
-$duplicate_check_query = "SELECT user_id, JobReferenceNumber, COUNT(*) AS duplicate_count
-                          FROM eoi
-                          GROUP BY user_id, JobReferenceNumber
-                          HAVING COUNT(*) > 1";
-
-$duplicate_result = mysqli_query($dbconn, $duplicate_check_query);
-?>
-
 ?>
 
 <!DOCTYPE html>
@@ -149,6 +152,12 @@ $duplicate_result = mysqli_query($dbconn, $duplicate_check_query);
                 </div>
 
                 <div class="form-group">
+                    <label for="user_id" class="form-label">User ID:</label>
+                    <input type="number" id="user_id" name="user_id" class="form-input"
+                        value="<?php echo isset($_GET['user_id']) ? htmlspecialchars($_GET['user_id']) : ''; ?>">
+                </div>
+
+                <div class="form-group">
                     <label for="first_name" class="form-label">First Name:</label>
                     <input type="text" id="first_name" name="first_name" class="form-input"
                         value="<?php echo isset($_GET['first_name']) ? htmlspecialchars($_GET['first_name']) : ''; ?>">
@@ -160,6 +169,18 @@ $duplicate_result = mysqli_query($dbconn, $duplicate_check_query);
                         value="<?php echo isset($_GET['last_name']) ? htmlspecialchars($_GET['last_name']) : ''; ?>">
                 </div>
 
+                <div class="form-group">
+                    <label for="from_date" class="form-label">From Date:</label>
+                    <input type="date" id="from_date" name="from_date" class="form-input"
+                        value="<?php echo isset($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : ''; ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="to_date" class="form-label">To Date:</label>
+                    <input type="date" id="to_date" name="to_date" class="form-input"
+                        value="<?php echo isset($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : ''; ?>">
+                </div>
+
                 <div class="form-buttons">
                     <button type="submit" class="btn btn-primary">Apply Filters</button>
                     <a href="manage.php"><button type="button" class="btn btn-secondary">Reset</button></a>
@@ -167,54 +188,50 @@ $duplicate_result = mysqli_query($dbconn, $duplicate_check_query);
             </form>
         </div>
 
-        <!-- Delete EOIs Form -->
+        <!-- Delete EOIs Forms -->
         <div id="delete-container" class="form-container">
-            <h3 class="section-title">Delete EOIs by Job Reference</h3>
-            <form id="delete-form" method="POST" action=""
-                onsubmit="return confirm('Are you sure you want to delete all EOIs with this job reference? This action cannot be undone.');">
-                <div class="form-group">
-                    <label for="job_ref_to_delete" class="form-label">Job Reference:</label>
-                    <select id="job_ref_to_delete" name="job_ref_to_delete" class="form-select" required>
-                        <option value="" disabled selected>Select a job reference</option>
-                        <option value="GD123">Game Developer: GD123</option>
-                        <option value="GA456">Game Artist: GA456</option>
-                        <option value="SD789">Sound Designer: SD789</option>
-                        <option value="GT101">Game Tester: GT101</option>
-                        <option value="GW202">Game Writer: GW202</option>
-                        <option value="IX303">UI/UX Designer: IX303</option>
-                    </select>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" name="delete_job_ref" class="btn btn-danger">Delete EOIs</button>
-                </div>
-            </form>
+            <h3 class="section-title">Delete EOIs</h3>
+
+            <!-- Delete by Job Reference -->
+            <div class="delete-section">
+                <h4>Delete by Job Reference</h4>
+                <form id="delete-job-ref-form" method="POST" action=""
+                    onsubmit="return confirm('Are you sure you want to delete all EOIs with this job reference? This action cannot be undone.');">
+                    <div class="form-group">
+                        <label for="job_ref_to_delete" class="form-label">Job Reference:</label>
+                        <select id="job_ref_to_delete" name="job_ref_to_delete" class="form-select" required>
+                            <option value="" disabled selected>Select a job reference</option>
+                            <option value="GD123">Game Developer: GD123</option>
+                            <option value="GA456">Game Artist: GA456</option>
+                            <option value="SD789">Sound Designer: SD789</option>
+                            <option value="GT101">Game Tester: GT101</option>
+                            <option value="GW202">Game Writer: GW202</option>
+                            <option value="IX303">UI/UX Designer: IX303</option>
+                        </select>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" name="delete_job_ref" class="btn btn-danger">Delete EOIs</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Delete by User ID -->
+            <div class="delete-section">
+                <h4>Delete by User ID</h4>
+                <form id="delete-user-id-form" method="POST" action=""
+                    onsubmit="return confirm('Are you sure you want to delete all EOIs for this User ID? This action cannot be undone.');">
+                    <div class="form-group">
+                        <label for="user_id_to_delete" class="form-label">User ID:</label>
+                        <input type="number" id="user_id_to_delete" name="user_id_to_delete" class="form-input"
+                            required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" name="delete_user_id" class="btn btn-danger">Delete EOIs</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Duplicate Applications Section -->
-        <?php if ($duplicate_result && mysqli_num_rows($duplicate_result) > 0): ?>
-        <div id="duplicate-container" class="form-container">
-            <h3 class="section-title">Duplicate Applications</h3>
-            <form method="post">
-                <table class="data-table">
-                    <tr class="table-header">
-                        <th class="table-heading">User Name</th>
-                        <th class="table-heading">Job Reference</th>
-                        <th class="table-heading">Duplicate Count</th>
-                    </tr>
-                    <?php while ($row = mysqli_fetch_assoc($duplicate_result)): ?>
-                    <tr>
-                        <td class="table-cell"><?php echo htmlspecialchars($row['user_id']); ?></td>
-                        <td class="table-cell"><?php echo htmlspecialchars($row['JobReferenceNumber']); ?></td>
-                        <td class="table-cell"><?php echo htmlspecialchars($row['duplicate_count']); ?></td>
-                    </tr>
-                    <?php endwhile; ?>
-                </table>
-                <div class="form-buttons">
-                    <button type="submit" name="delete_duplicates" class="btn btn-danger">Delete Duplicates</button>
-                </div>
-            </form>
-        </div>
-        <?php endif; ?>
 
         <!-- Display EOIs -->
         <div id="eoi-results">
@@ -271,9 +288,6 @@ $duplicate_result = mysqli_query($dbconn, $duplicate_check_query);
             // Close connection
             if ($result && is_object($result)) {
                 mysqli_free_result($result);
-            }
-            if ($duplicate_result && is_object($duplicate_result)) {
-                mysqli_free_result($duplicate_result);
             }
             mysqli_close($dbconn);
             ?>
