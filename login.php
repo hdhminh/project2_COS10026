@@ -1,5 +1,5 @@
 <?php
-// login.php - Login page (No password hashing)
+// login.php - Login page
 require_once "settings.php"; // Include database settings
 session_start();
 
@@ -34,6 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['is_admin'] = $user['is_admin'];
+                
+                // Store additional user info in session if needed
+                $_SESSION['first_name'] = $user['FirstName'];
+                $_SESSION['last_name'] = $user['LastName'];
+                $_SESSION['email'] = $user['email'];
                 
                 // Redirect to homepage
                 header("Location: index.php");
