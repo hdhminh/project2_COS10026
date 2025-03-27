@@ -4174,3 +4174,172 @@
   background: linear-gradient(45deg, #00b386, #2196f3);
   transform: scale(1.05);
 }
+
+.form-section {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.form-section.active {
+  display: block;
+  opacity: 1;
+}
+
+.next-section-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: var(--borderColor);
+  color: var(--mainColor);
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.next-section-btn:hover {
+  background-color: var(--gradientEnd);
+}
+
+.progress-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.progress-step {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: gray;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.progress-step.active {
+  background-color: var(--gradientStart);
+  color: white;
+}
+
+/* Gender label styling */
+label[for="gender"] {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: var(--textColor);
+  font-weight: 500;
+}
+
+/* Gender options container */
+.gender-options {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+/* Individual radio option styling */
+.gender-options label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--textColor);
+  padding-left: 45px;
+}
+
+.gender-options label:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(10px);
+}
+
+/* Hide default radio button */
+.gender-options input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: auto;
+  height: auto;
+  margin: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Custom radio button appearance */
+.gender-options label:before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--borderColor);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* Radio button center dot */
+.gender-options label:after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: var(--backgroundColor);
+  border-radius: 50%;
+  transform: translateY(-50%) scale(0);
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+/* Checked state */
+.gender-options input[type="radio"]:checked + label:before {
+  background-color: var(--borderColor);
+}
+
+.gender-options input[type="radio"]:checked + label:after {
+  transform: translateY(-50%) scale(1);
+}
+
+/* Animation for the radio when checking */
+@keyframes radioScale {
+  0% {
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    transform: translateY(-50%) scale(0.9);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+.gender-options input[type="radio"]:checked + label:before {
+  animation: radioScale 0.3s ease-in-out;
+}
+
+#State option[value=""][disabled] {
+  color: var(--textColor);
+  background-color: var(--backgroundColor);
+}
+
+#State option {
+  color: var(--textColor);
+  background-color: var(--backgroundColor);
+}
+
+#State {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--textColor);
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+}
