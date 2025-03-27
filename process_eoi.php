@@ -17,16 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 //
 // Example fields—adjust for your actual form names
 $jobRefNum    = trim(isset($_POST['position']) ? $_POST['position'] : '');
-$firstName    = trim(isset($_POST['First_Name']) ? $_POST['First_Name'] : '');
-$lastName     = trim(isset($_POST['Last_Name']) ? $_POST['Last_Name'] : '');
-$dateOfBirth  = trim(isset($_POST['DOB']) ? $_POST['DOB'] : '');
-$gender       = trim(isset($_POST['Gender']) ? $_POST['Gender'] : '');
-$street       = trim(isset($_POST['Street_Address']) ? $_POST['Street_Address'] : '');
-$suburb       = trim(isset($_POST['Suburb/town']) ? $_POST['Suburb/town'] : '');
-$state        = trim(isset($_POST['state']) ? $_POST['state'] : '');
-$postcode     = trim(isset($_POST['Postcode']) ? $_POST['Postcode'] : '');
-$email        = trim(isset($_POST['Email']) ? $_POST['Email'] : '');
-$phone        = trim(isset($_POST['Phone']) ? $_POST['Phone'] : '');
 $skills = isset($_POST['Skills']) ? $_POST['Skills'] : array();
 $skill1 = isset($skills[0]) ? $skills[0] : '';
 $skill2 = isset($skills[1]) ? $skills[1] : '';
@@ -34,29 +24,6 @@ $skill3 = isset($skills[2]) ? $skills[2] : '';
 $skill4 = isset($skills[3]) ? $skills[3] : '';
 $skill5 = isset($skills[4]) ? $skills[4] : '';
 $otherSkills = isset($skills[5]) ? $skills[5] : '';
-
-
-$createTableSQL = "CREATE TABLE IF NOT EXISTS eoi (
-    eoi_id INT AUTO_INCREMENT PRIMARY KEY,
-    jobRefNum VARCHAR(20) NOT NULL,
-    firstName VARCHAR(50) NOT NULL,
-    lastName VARCHAR(50) NOT NULL,
-    dateOfBirth DATE NOT NULL,
-    gender ENUM('Male', 'Female', 'Other') NOT NULL,
-    street VARCHAR(100) NOT NULL,
-    suburb VARCHAR(50) NOT NULL,
-    state VARCHAR(10) NOT NULL,
-    postcode VARCHAR(10) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
-    skill1 VARCHAR(50),
-    skill2 VARCHAR(50),
-    skill3 VARCHAR(50),
-    skill4 VARCHAR(50),
-    skill5 VARCHAR(50),
-    otherSkills TEXT,
-    status VARCHAR(20) DEFAULT 'New'
-);";
 
 // Remove backslashes and HTML special chars
 $jobRefNum    = strip_tags(stripslashes($jobRefNum));
@@ -79,25 +46,9 @@ function showError($message) {
 }
 
 if (empty($jobRefNum)) showError("Job Reference Number is required.");
-if (empty($firstName)) showError("First Name is required.");
-if (empty($lastName)) showError("Last Name is required.");
-if (empty($street)) showError("Street is required.");
-if (empty($suburb)) showError("Suburb is required.");
-if (empty($state)) showError("State is required.");
-if (empty($postcode)) showError("Postcode is required.");
-if (empty($email)) showError("Email is required.");
-if (empty($phone)) showError("Phone Number is required.");
 
 // b) Check job reference number is exactly 5 alphanumeric
 if (!preg_match('/^[A-Za-z0-9]{5}$/', $jobRefNum)) showError("Job Reference Number must be exactly 5 alphanumeric characters.");
-if (!preg_match('/^[a-zA-Z ]{1,20}$/', $firstName)) showError("First Name must be 1–20 alphabetic characters.");
-if (!preg_match('/^[A-Za-z-]{1,20}$/', $lastName)) showError("Last Name must be 1–20 alphabetic characters.");
-if (!preg_match('/^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/', $dateOfBirth)) showError("Date of Birth must be in format dd/mm/yyyy.");
-if (!in_array($state, ["VIC","NSW","QLD","NT","WA","SA","TAS","ACT"])) showError("Invalid state selection.");
-if (!preg_match('/^\d{4}$/', $postcode)) showError("Postcode must be exactly 4 digits.");
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) showError("Invalid email address format.");
-if (!preg_match('/^[0-9 ]{8,12}$/', $phone)) showError("Phone number must be 8–12 digits/spaces.");
-
 
 // i) If a “check box” was selected requiring OtherSkills, ensure not empty, etc.
 // if ( /* skill checkbox was ticked */ && empty($otherSkills)) {...}
@@ -115,19 +66,25 @@ if (!$conn) {
     die("Database connection failed: " . mysqli_connect_error());
 }
 
-if (!mysqli_query($conn, $createTableSQL)) {
-    die("Error creating table: " . mysqli_error($conn));
-}
 
 //
 // 6. Insert the record
 //
+
+session_start(); // Start session to get user id
+
+if (!isset($_SESSION['user_id'])) {
+    die("Error: You must be logged in to apply."); // Check login
+}
+
+
+$user_id = $_SESSION['user_id']; // Get user id from users database
+
 $insertSQL = "
     INSERT INTO eoi
-    (JobReferenceNumber, FirstName, LastName, DateOfBirth, Gender,
-     StreetAddress, Suburb, State, Postcode, Email, Phone,
+    (user_id, JobReferenceNumber,
      Skill1, Skill2, Skill3, Skill4, Skill5, OtherSkills)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ";
 
 $stmt = mysqli_prepare($conn, $insertSQL);
@@ -136,18 +93,9 @@ if (!$stmt) {
 }
 
 // Bind parameters (s = string). Adapt if you use other data types.
-mysqli_stmt_bind_param($stmt, "sssssssssssssssss",
+mysqli_stmt_bind_param($stmt, "isssssss",
+    $user_id,
     $jobRefNum,
-    $firstName,
-    $lastName,
-    $dateOfBirth,
-    $gender,
-    $street,
-    $suburb,
-    $state,
-    $postcode,
-    $email,
-    $phone,
     $skill1,
     $skill2,
     $skill3,
