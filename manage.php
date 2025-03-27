@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
+    
     // Update EOI status
     if (isset($_POST['update_status'])) {
         $eoi_id = mysqli_real_escape_string($dbconn, $_POST['eoi_id']);
@@ -32,10 +33,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p class='error-message'>Error updating status: " . mysqli_error($dbconn) . "</p>";
         }
     }
-}
 
+
+    // Delete duplicate applications
+    if (isset($_POST['delete_duplicates'])) {
+        $duplicate_query = "DELETE e1 FROM eoi e1
+                            INNER JOIN eoi e2
+                            WHERE e1.ApplicationID > e2.ApplicationID
+                            AND e1.user_id = e2.user_id
+                            AND e1.JobReferenceNumber = e2.JobReferenceNumber";
+        
+        if (mysqli_query($dbconn, $duplicate_query)) {
+            echo "<p class='success-message'>Successfully deleted duplicate applications.</p>";
+        } else {
+            echo "<p class='error-message'>Error deleting duplicates: " . mysqli_error($dbconn) . "</p>";
+        }
+    }
+        
+    
+}
 // Determine query based on filter parameters
-$query = "SELECT * FROM eoi";
+$query = "SELECT * FROM users, eoi";
 $where_clauses = [];
 
 // Filter by job reference if provided
@@ -67,6 +85,17 @@ $query_error = "";
 if (!$result) {
     $query_error = "Database error: " . mysqli_error($dbconn);
 }
+
+// Check for duplicate applications
+$duplicate_result = null;
+$duplicate_check_query = "SELECT user_id, JobReferenceNumber, COUNT(*) AS duplicate_count
+                          FROM eoi
+                          GROUP BY user_id, JobReferenceNumber
+                          HAVING COUNT(*) > 1";
+
+$duplicate_result = mysqli_query($dbconn, $duplicate_check_query);
+?>
+
 ?>
 
 <!DOCTYPE html>
@@ -161,6 +190,32 @@ if (!$result) {
             </form>
         </div>
 
+        <!-- Duplicate Applications Section -->
+        <?php if ($duplicate_result && mysqli_num_rows($duplicate_result) > 0): ?>
+        <div id="duplicate-container" class="form-container">
+            <h3 class="section-title">Duplicate Applications</h3>
+            <form method="post">
+                <table class="data-table">
+                    <tr class="table-header">
+                        <th class="table-heading">User Name</th>
+                        <th class="table-heading">Job Reference</th>
+                        <th class="table-heading">Duplicate Count</th>
+                    </tr>
+                    <?php while ($row = mysqli_fetch_assoc($duplicate_result)): ?>
+                    <tr>
+                        <td class="table-cell"><?php echo htmlspecialchars($row['user_id']); ?></td>
+                        <td class="table-cell"><?php echo htmlspecialchars($row['JobReferenceNumber']); ?></td>
+                        <td class="table-cell"><?php echo htmlspecialchars($row['duplicate_count']); ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+                <div class="form-buttons">
+                    <button type="submit" name="delete_duplicates" class="btn btn-danger">Delete Duplicates</button>
+                </div>
+            </form>
+        </div>
+        <?php endif; ?>
+
         <!-- Display EOIs -->
         <div id="eoi-results">
             <h2 class="section-title">Expressions of Interest</h2>
@@ -216,6 +271,9 @@ if (!$result) {
             // Close connection
             if ($result && is_object($result)) {
                 mysqli_free_result($result);
+            }
+            if ($duplicate_result && is_object($duplicate_result)) {
+                mysqli_free_result($duplicate_result);
             }
             mysqli_close($dbconn);
             ?>
