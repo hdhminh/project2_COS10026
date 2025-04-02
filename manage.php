@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Determine query based on filter parameters
-$query = "SELECT * FROM eoi";
+$query = "SELECT * FROM eoi,users";
 $where_clauses = [];
 
 // Filter by job reference if provided
